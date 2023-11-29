@@ -7,4 +7,5 @@ export const routes = {
     mainPage: () => '/',
     loginPage: () => '/login',
     signupPage: () => '/signup',
+    notFoundPage: () => '*',
 };

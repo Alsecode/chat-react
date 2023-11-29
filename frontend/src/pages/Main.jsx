@@ -1,33 +1,28 @@
 import { useEffect, useState } from 'react';
-//import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-//import AuthContext from '../../../contexts';
 import { useDispatch } from 'react-redux';
-import { routes } from '../../../routes';
+import { routes } from '../routes.js';
 
-import { actions as channelsActions }from '../../../slices/channelsSlice.js';
-import { actions as messagesActions }from '../../../slices/messagesSlice.js';
-import { actions as currentChannelActions }from '../../../slices/currentChannelSlice.js';
+import { actions as channelsActions }from '../slices/channelsSlice.js';
+import { actions as messagesActions }from '../slices/messagesSlice.js';
+import { actions as currentChannelActions }from '../slices/currentChannelSlice.js';
 
-import Channels from './Channels/Channels.jsx';
-import Chat from './Chat/Chat.jsx';
-
-import io from 'socket.io-client';
-const socket = io('http://localhost:3000/');
+import Channels from '../components/channels/Channels.jsx';
+import Chat from '../components/chat/Chat.jsx';
+import useAuth from '../hooks/useAuth.jsx';
+import LoadingImage from "../img/loading.png";
 
 const MainPage = () => {
+  const { getAuthHeader } = useAuth();
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = JSON.parse(localStorage.getItem('userId')).token;
+      console.log(getAuthHeader);
       const { data } = await axios.get(routes.dataPath(), {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: getAuthHeader(),
       });
-
       const {channels, messages, currentChannelId } = data;
 
       dispatch(channelsActions.addChannels(channels));
@@ -36,13 +31,13 @@ const MainPage = () => {
 
       setIsLoading(false);
     };
+
     fetchData();
-    console.log('fllo');
-  }, [dispatch]);
+  }, [dispatch, getAuthHeader]);
 
   //ПОМЕНЯТЬ ЭТО НА КАРТИНКУ ЗАГРУЗКИ!!!
     if (isLoading === true) {
-      return null;
+      return <img src={LoadingImage} width='500px' alt='Загрузка'/>;
     }
     
     console.log('а теперь тут');
@@ -53,10 +48,10 @@ const MainPage = () => {
             <div className="col-12 bg-white mh-100">
                 <div className='row h-100'>
                     <div className="col-md-2 col-4 border-end h-100 bg-light px-0">
-                      <Channels socket={socket}/>
+                      <Channels/>
                     </div>
                   <div className="col p-0 d-flex flex-column h-100">
-                    <Chat socket={socket}/>
+                    <Chat/>
                   </div> 
                 </div>
             </div>

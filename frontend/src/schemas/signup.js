@@ -2,14 +2,14 @@ import * as yup from 'yup';
 
 const yupSchema = yup.object().shape({
     username: yup.string().trim()
-      .required('Обязательное поле')
-      .min(3, 'От 3 до 20 символов')
-      .max(20, 'От 3 до 20 символов'),
+      .required('required')
+      .min(3, 'min3max20')
+      .max(20, 'min3max20'),
     password: yup.string()
-      .required('Обязательное поле')
-      .min(6, 'Не менее 6 символов'),
+      .required('required')
+      .min(6, 'min6'),
     passwordConfirmation: yup.string()
-      .oneOf([yup.ref('password'), null], 'Пароли должны совпадать')
+      .oneOf([yup.ref('password'), null], 'match')
 });
 
 export default yupSchema;

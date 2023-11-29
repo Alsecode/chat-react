@@ -1,15 +1,19 @@
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { useContext, useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { useForm } from "react-hook-form";
 
-import AuthContext from '../../../contexts';
-import { routes } from '../../../routes';
+import useAuth from '../hooks/useAuth';
+import { routes } from '../routes';
+
+import { useTranslation } from 'react-i18next';
 
 const FormSection = () => {
+  const { t } = useTranslation();
+
   const [authFailed, setAuthFailed] = useState(false);
-  const auth = useContext(AuthContext);
+  const { logIn } = useAuth();
   const navigate = useNavigate();
   const inputRef = useRef();
 
@@ -24,8 +28,7 @@ const FormSection = () => {
     setAuthFailed(false);
     try {
       const res = await axios.post(routes.loginPath(), values);
-      localStorage.setItem('userId', JSON.stringify(res.data));
-      auth.logIn();
+      logIn(res.data);
       navigate(routes.mainPage());
     } catch (err) {
       if (err.isAxiosError && err.response.status === 401) {
@@ -39,7 +42,7 @@ const FormSection = () => {
 
 	return (
 		<Form onSubmit={handleSubmit(onSubmit)}>
-			<h1 className='mb-4 text-center'>Войти</h1>
+			<h1 className='mb-4 text-center'>{t('logIn.login')}</h1>
 			<Form.Group className="form-floating mb-3">
         <Form.Control
 					type="text"
@@ -54,7 +57,7 @@ const FormSection = () => {
             inputRef.current = e;
           }}
         />
-				<Form.Label htmlFor="username">Ваш ник</Form.Label>
+				<Form.Label htmlFor="username">{t('logIn.username')}</Form.Label>
 			</Form.Group>
 			<Form.Group className="form-floating mb-3">
           <Form.Control
@@ -66,10 +69,10 @@ const FormSection = () => {
 					required
 					isInvalid={authFailed}
           />
-				<Form.Label htmlFor="password">Пароль</Form.Label>
-        <div className="invalid-tooltip">Неверные имя пользователя или пароль</div>
+				<Form.Label htmlFor="password">{t('logIn.password')}</Form.Label>
+        <div className="invalid-tooltip">{t('logIn.error')}</div>
 			</Form.Group>
-			<Button type="submit" variant="outline-primary" className='w-100 mb-3 mt-2'>Войти</Button>
+			<Button type="submit" variant="outline-primary" className='w-100 mb-3 mt-2'>{t('logIn.login')}</Button>
 		</Form>
 	);
 };

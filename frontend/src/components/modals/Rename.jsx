@@ -1,34 +1,42 @@
 import { useEffect, useRef } from 'react';
 import { Modal, FormGroup, FormControl, FormLabel, Button } from 'react-bootstrap';
 import { useForm } from "react-hook-form";
-
 import { yupResolver } from "@hookform/resolvers/yup";
-import schemas from '../../../../schemas/index.js';
+import { useTranslation } from 'react-i18next';
 
-const Add = ({hideModal, socket, channels}) => {
+import schemas from '../../schemas/index.js';
+import useApi from '../../hooks/useApi.jsx';
+
+const Rename = ({modalInfo, hideModal, channels}) => {
+  const { t } = useTranslation();
+  const api = useApi();
+
   const inputRef = useRef();
   useEffect(() => {
-    inputRef.current.focus();
+    inputRef.current.select();
   }, []);
 
   const channelsNames = channels.map((channel) => channel.name);
-  
-  const yupSchema = schemas.channel(channelsNames);
 
+  const yupSchema = schemas.channel(channelsNames);
+  
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(yupSchema),
+    defaultValues: { name: `${modalInfo.item.name}` },
   });
   const { ref, ...rest } = register('name');
 
   const onSubmit = ({ name }) => {
-    socket.emit('newChannel', { name: `${name.trim()}` });
+    api.renameChannel({ id: modalInfo.item.id, name: `${name.trim()}`});
     hideModal();
   }
 
+  const errorText = errors.name ? `main.channels.modals.errors.${errors.name.message}` : null;
+    
   return (
     <Modal show centered>
       <Modal.Header closeButton onHide={hideModal}>
-        <Modal.Title>Добавить канал</Modal.Title>
+        <Modal.Title>{t('main.channels.modals.rename')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -43,11 +51,11 @@ const Add = ({hideModal, socket, channels}) => {
               }}
             />
             <FormLabel htmlFor="name" className="visually-hidden">Название</FormLabel>
-            <div className="invalid-feedback">{errors.name?.message}</div>
+            <div className="invalid-feedback">{t(errorText)}</div>
           </FormGroup>
           <div className="d-flex justify-content-end gap-2 mt-3">
-            <Button variant="secondary" onClick={hideModal}>Отменить</Button>
-            <Button variant="primary" type="submit">Отправить</Button>
+            <Button variant="secondary" onClick={hideModal}>{t('main.channels.modals.undoBtn')}</Button>
+            <Button variant="primary" type="submit">{t('main.channels.modals.sendBtn')}</Button>
           </div>
         </form>
       </Modal.Body>
@@ -55,4 +63,4 @@ const Add = ({hideModal, socket, channels}) => {
   );
 };
 
-export default Add;
+export default Rename;

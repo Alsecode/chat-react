@@ -2,17 +2,23 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useContext, useState, useEffect, useRef } from 'react';
 import { Button, Form } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import AuthContext from '../../../contexts';
-import { routes } from '../../../routes';
-import schemas from '../../../schemas';
+import AuthContext from '../contexts/auth';
+import { routes } from '../routes';
+import schemas from '../schemas';
+
+const generateErrorText = (err, field) => {
+  return err ? `signUp.errors.${field}.${err.message}` : null;
+}
 
 const FormSection = () => {
   const [authFailed, setAuthFailed] = useState(false);
   const auth = useContext(AuthContext);
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const inputRef = useRef();
 
   useEffect(() => {
@@ -28,8 +34,7 @@ const FormSection = () => {
   const onSubmit = async ({username, password}) => {
     try {
       const res = await axios.post(routes.signupPath(), {username, password});
-      localStorage.setItem('userId', JSON.stringify(res.data));
-      auth.logIn();
+      auth.logIn(res.data);
       navigate(routes.mainPage());
     } catch (err) {
       if (err.isAxiosError && err.response.status === 409) {
@@ -41,9 +46,13 @@ const FormSection = () => {
     }
   }
 
+  const usernameErrorText = generateErrorText(errors.username, 'username');
+  const passwordErrorText = generateErrorText(errors.password, 'password');
+  const confirmationErrorText = generateErrorText(errors.passwordConfirmation, 'confirmation');
+
 	return (
 		<Form onSubmit={handleSubmit(onSubmit)}>
-			<h1 className='mb-4 text-center'>Регистрация</h1>
+			<h1 className='mb-4 text-center'>{t('signUp.signup')}</h1>
 			<Form.Group className="form-floating mb-3">
         <Form.Control
 					type="text"
@@ -57,8 +66,8 @@ const FormSection = () => {
             inputRef.current = e;
           }}
         />
-				<Form.Label htmlFor="username">Имя пользователя</Form.Label>
-        <div className="invalid-tooltip">{errors.username?.message || 'Такой пользователь уже существует'}</div>
+				<Form.Label htmlFor="username">{t('signUp.username')}</Form.Label>
+        <div className="invalid-tooltip">{t(usernameErrorText) || t('signUp.errors.username.alreadyExist')}</div>
 			</Form.Group>
 			<Form.Group className="form-floating mb-3">
           <Form.Control
@@ -69,8 +78,8 @@ const FormSection = () => {
           {...register("password")}
 					isInvalid={errors.password}
           />
-				<Form.Label htmlFor="password">Пароль</Form.Label>
-        <div className="invalid-tooltip">{errors.password?.message}</div>
+				<Form.Label htmlFor="password">{t('signUp.password')}</Form.Label>
+        <div className="invalid-tooltip">{t(passwordErrorText)}</div>
 			</Form.Group>
       <Form.Group className="form-floating mb-3">
           <Form.Control
@@ -81,10 +90,10 @@ const FormSection = () => {
           {...register("passwordConfirmation")}
 					isInvalid={errors.passwordConfirmation}
           />
-				<Form.Label htmlFor="password">Подтвердите пароль</Form.Label>
-        <div className="invalid-tooltip">{errors.passwordConfirmation?.message}</div>
+				<Form.Label htmlFor="password">{t('signUp.confirmation')}</Form.Label>
+        <div className="invalid-tooltip">{t(confirmationErrorText)}</div>
 			</Form.Group>
-			<Button type="submit" variant="outline-primary" className='w-100 mb-3 mt-2'>Зарегистрироваться</Button>
+			<Button type="submit" variant="outline-primary" className='w-100 mb-3 mt-2'>{t('signUp.button')}</Button>
 		</Form>
 	);
 };

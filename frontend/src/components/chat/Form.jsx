@@ -1,14 +1,20 @@
 import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { Button, Form } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 
-const ChatForm = ({ channelId, username, socket }) => {
+import useApi from "../../hooks/useApi";
+
+const ChatForm = ({ channelId, username }) => {
+  const { t } = useTranslation();
   const inputRef = useRef();
 
   // Фокус при переключении каналов
   useEffect(() => {
     inputRef.current.focus();
   }, [channelId]);
+
+  const api = useApi();
 
   const { register, handleSubmit, watch, reset, formState } = useForm();
   const { ref, ...rest } = register('body');
@@ -20,9 +26,9 @@ const ChatForm = ({ channelId, username, socket }) => {
       channelId: channelId,
       username: username,
     }
-    socket.emit('newMessage', sendingMessage);
+    api.newMessage(sendingMessage);
     reset();
-  }
+  };
 
   return (
     <div className="mt-auto px-5 py-3">
@@ -30,7 +36,7 @@ const ChatForm = ({ channelId, username, socket }) => {
         <Form.Group className="input-group has-validation">
           <Form.Control
             name="body"
-            placeholder="Введите сообщение..."
+            placeholder={t('main.chat.input')}
             className="border-0 p-0 ps-2 form-control"
             {...rest}
             ref={(e) => {

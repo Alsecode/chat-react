@@ -1,21 +1,16 @@
 import { useState, useEffect, useRef } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-import {selectors as channelsSelectors } from '../../../../slices/channelsSlice.js';
+import {selectors as channelsSelectors } from '../../slices/channelsSlice.js';
 
-import { actions as currentChannelActions }from '../../../../slices/currentChannelSlice.js';
-import { actions as channelsActions }from '../../../../slices/channelsSlice.js';
-
-import renderModal from '../modals/renderModal';
+import renderModal from '../modals/renderModal.js';
 import Channel from './Channel.jsx';
 
-import '../Main.scss';
+import { useTranslation } from 'react-i18next';
 
-const Channels = ({ socket }) => {
+const Channels = () => {
+  const { t } = useTranslation();
 
-    console.log('большой рендер');
-
-    const dispatch = useDispatch();
     const [modalInfo, setModalInfo] = useState({ type: null, item: null });
     const hideModal = () => setModalInfo({ type: null, item: null });
     const showModal = (type, item = null, allItems = null) => setModalInfo({ type, item, allItems});
@@ -28,22 +23,6 @@ const Channels = ({ socket }) => {
 
     const currentChannel = useSelector((state) => state.currentChannel);
     const currentChannelId = currentChannel.id;
-
-    socket.on('newChannel', (payload) => {
-      dispatch(channelsActions.addChannel(payload));
-    });
-
-    const mainChannelId = 1;
-    socket.on('removeChannel', ({ id }) => {
-      dispatch(channelsActions.removeChannel(id));
-      if (id === currentChannelId) {
-        dispatch(currentChannelActions.updateCurrentChannel(mainChannelId));
-      }
-    });
-
-    socket.on('renameChannel', (payload) => {
-      dispatch(channelsActions.renameChannel({ id: payload.id, changes: payload }));
-    });
 
         // Прокрутка при удалении или добавлении канала
         useEffect(() => {
@@ -66,7 +45,7 @@ const Channels = ({ socket }) => {
     return (
         <div className='d-flex flex-column h-100'>
             <div className='d-flex p-4 mt-1 mb-2 justify-content-between pe-2'>
-                <b>Каналы</b>
+                <b>{t('main.channels.header')}</b>
                 <button 
                   type='button'
                   className='btn text-primary btn-group-vertical p-0'
@@ -87,7 +66,7 @@ const Channels = ({ socket }) => {
                   );
                 })}
             </ul>
-            {renderModal({ modalInfo, hideModal, socket, channels })}
+            {renderModal({ modalInfo, hideModal, channels })}
         </div>
     );
 };
