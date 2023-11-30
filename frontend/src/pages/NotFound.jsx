@@ -10,7 +10,7 @@ const NotFound = () => {
   return (
     <div className='container h-100'>
       <div className="d-flex flex-column justify-content-center align-items-center h-100">
-          <img src={NotFoundImage} alt='NotFoundPic' className='w-25 animation-show'></img>
+          <img src={NotFoundImage} alt={t('extra.notFound')} className='w-25 animation-show'></img>
           <h2>{t('notFound.header')}</h2>
           <p>{t('notFound.offer.text')} <Link to={routes.mainPage()}>{t('notFound.offer.link')}</Link></p>  
       </div>

@@ -1,12 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
 import {selectors as channelsSelectors } from '../../slices/channelsSlice.js';
 
 import renderModal from '../modals/renderModal.js';
 import Channel from './Channel.jsx';
-
-import { useTranslation } from 'react-i18next';
 
 const Channels = () => {
   const { t } = useTranslation();

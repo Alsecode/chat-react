@@ -1,6 +1,8 @@
 import './App.scss';
 
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import MainPage from './pages/Main';
 import LoginPage from './pages/Login';
@@ -16,11 +18,12 @@ const MainPageRouter = ({ children }) => {
 
   return (
     user ? children : <Navigate to={routes.loginPage()} />
-  )
-}
+  );
+};
 
 const App = () => {
   return (
+    <>
     <BrowserRouter>
       <div className='d-flex flex-column vh-100 bg-light'>
       <Header />
@@ -32,6 +35,8 @@ const App = () => {
         </Routes>
       </div>
     </BrowserRouter>
+    <ToastContainer />
+    </>
   );
 };
 

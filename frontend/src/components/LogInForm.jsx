@@ -8,6 +8,7 @@ import useAuth from '../hooks/useAuth';
 import { routes } from '../routes';
 
 import { useTranslation } from 'react-i18next';
+import showToast from '../showToast';
 
 const FormSection = () => {
   const { t } = useTranslation();
@@ -31,7 +32,10 @@ const FormSection = () => {
       logIn(res.data);
       navigate(routes.mainPage());
     } catch (err) {
-      if (err.isAxiosError && err.response.status === 401) {
+      if (err.isAxiosError) {
+        showToast('error', t('toasts.error'));
+        return;
+      } else if (err.response.status === 401) {
         setAuthFailed(true);
         inputRef.current.select();
         return;

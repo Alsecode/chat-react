@@ -1,25 +1,19 @@
 import React, { useState, StrictMode } from 'react';
+import { Provider } from 'react-redux';
+import initStore from './slices/index';
+import { io } from 'socket.io-client';
+import i18next from 'i18next';
+import { initReactI18next } from 'react-i18next';
+import LanguageDetector from 'i18next-browser-languagedetector';
 
 import { actions as channelsActions } from './slices/channelsSlice.js';
 import { actions as messagesActions } from './slices/messagesSlice.js';
+import { actions as currentChannelActions } from './slices/currentChannelSlice.js';
 
 import LangContext from './contexts/lang';
 import AuthContext from './contexts/auth';
 import ApiContext from './contexts/api';
-
-
-
-import { Provider } from 'react-redux';
-import initStore from './slices/index';
-
 import App from './App.jsx';
-
-import { io } from 'socket.io-client';
-
-
-import i18next from 'i18next';
-import { initReactI18next } from 'react-i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
 import resources from './locales/index.js';
 
 const AuthProvider = ({ children }) => {
@@ -50,13 +44,27 @@ const AuthProvider = ({ children }) => {
   );
 };
 
-const sendSocket = (action, payload, socket) => {
-  const response = socket.emit(action, payload);
-};
+const sendSocket = (action, item, socket, dispatch) => (
+  new Promise((resolve, reject) => {
+    const timeoutId = setTimeout(() => reject(() => new Error('Timeout')), 3000);
+    socket.emit(action, item, (response) => {
+      clearTimeout(timeoutId);
+      if (response.status === 'ok') {
+        resolve(response);
+      } else {
+        reject(() => new Error('Response Error'));
+        return;
+      }
+      if (action === 'newChannel') {
+        dispatch(currentChannelActions.updateCurrentChannel(response.data.id));
+      }
+    });
+  })
+);
 
-const getApi = (socket) => ({
+const getApi = (socket, dispatch) => ({
   newMessage: (message) => sendSocket('newMessage', message, socket),
-  newChannel: (channel) => sendSocket('newChannel', channel, socket),
+  newChannel: (channel) => sendSocket('newChannel', channel, socket, dispatch),
   removeChannel: (id) => sendSocket('removeChannel', id, socket),
   renameChannel: ({ id, name }) => sendSocket('renameChannel', { id, name }, socket),
 });
@@ -114,7 +122,7 @@ const init = async () => {
     <StrictMode>
       <LangProvider>
         <AuthProvider>
-          <ApiContext.Provider value={getApi(socket)}>
+          <ApiContext.Provider value={getApi(socket, dispatch)}>
             <Provider store={store}>
               <App/>
             </Provider>

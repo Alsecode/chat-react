@@ -4,30 +4,42 @@ import { Button, Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 
 import useApi from "../../hooks/useApi";
+import showToast from "../../showToast";
+import filter from "../../filter";
 
 const ChatForm = ({ channelId, username }) => {
   const { t } = useTranslation();
   const inputRef = useRef();
+  const submitRef = useRef();
 
-  // Фокус при переключении каналов
   useEffect(() => {
     inputRef.current.focus();
-  }, [channelId]);
+  });
 
   const api = useApi();
 
-  const { register, handleSubmit, watch, reset, formState } = useForm();
+  const { register, handleSubmit, watch, reset } = useForm();
   const { ref, ...rest } = register('body');
   const messageValue = watch('body') || '';
 
-  const onSubmit = ({ body }) => {
+  const onSubmit = async ({ body }) => {
     const sendingMessage = {
-      body: body,
+      body: filter.clean(body),
       channelId: channelId,
       username: username,
     }
-    api.newMessage(sendingMessage);
-    reset();
+    try {
+      inputRef.current.disabled = true;
+      submitRef.current.disabled = true;
+      await api.newMessage(sendingMessage);
+      inputRef.current.disabled = false;
+      reset();
+    } catch {
+      inputRef.current.disabled = false;
+      submitRef.current.disabled = false;
+      showToast('error', t('toasts.error'));
+      return;
+    }
   };
 
   return (
@@ -36,6 +48,7 @@ const ChatForm = ({ channelId, username }) => {
         <Form.Group className="input-group has-validation">
           <Form.Control
             name="body"
+            id="body"
             placeholder={t('main.chat.input')}
             className="border-0 p-0 ps-2 form-control"
             {...rest}
@@ -44,10 +57,11 @@ const ChatForm = ({ channelId, username }) => {
               inputRef.current = e;
             }}
           />
-          <Form.Label htmlFor="body" className="visually-hidden">Текст</Form.Label>
+          <Form.Label htmlFor="body" className="visually-hidden">{t('extra.text')}</Form.Label>
           <Button
             type="submit"
-            disabled={formState.isSubmitting || !messageValue.trim()}
+            disabled={!messageValue.trim()}
+            ref={submitRef}
             className="btn-group-vertical py-2"
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" 

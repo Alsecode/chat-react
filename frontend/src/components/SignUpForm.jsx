@@ -9,6 +9,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import AuthContext from '../contexts/auth';
 import { routes } from '../routes';
 import schemas from '../schemas';
+import showToast from '../showToast';
 
 const generateErrorText = (err, field) => {
   return err ? `signUp.errors.${field}.${err.message}` : null;
@@ -37,7 +38,10 @@ const FormSection = () => {
       auth.logIn(res.data);
       navigate(routes.mainPage());
     } catch (err) {
-      if (err.isAxiosError && err.response.status === 409) {
+      if (err.isAxiosError) {
+        showToast('error', t('toasts.error'));
+        return;
+      } else if (err.response.status === 409) {
         setAuthFailed(true);
         inputRef.current.select();
         return;
@@ -45,6 +49,7 @@ const FormSection = () => {
       throw err;
     }
   }
+  
 
   const usernameErrorText = generateErrorText(errors.username, 'username');
   const passwordErrorText = generateErrorText(errors.password, 'password');

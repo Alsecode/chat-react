@@ -15,7 +15,7 @@ const LoginPage = () => {
                 <div className="d-flex flex-column bg-white border shadow-sm">
                     <div className="row p-5">
                         <div className="col-12 col-md-6 d-flex align-items-center justify-content-center">
-                            <img src={LoginImage} className='rounded animation-show' alt="Авторизация" width="200px" />
+                            <img src={LoginImage} className='rounded animation-show' alt={t('extra.auth')} width="200px" />
                         </div>
                         <div className="col-12 col-md-6 mt-3">
                             <Form/>

@@ -6,12 +6,15 @@ import { useTranslation } from 'react-i18next';
 
 import schemas from '../../schemas/index.js';
 import useApi from '../../hooks/useApi.jsx';
+import showToast from '../../showToast.js';
+import filter from "../../filter";
 
 const Rename = ({modalInfo, hideModal, channels}) => {
   const { t } = useTranslation();
   const api = useApi();
 
   const inputRef = useRef();
+  const submitRef = useRef();
   useEffect(() => {
     inputRef.current.select();
   }, []);
@@ -26,10 +29,19 @@ const Rename = ({modalInfo, hideModal, channels}) => {
   });
   const { ref, ...rest } = register('name');
 
-  const onSubmit = ({ name }) => {
-    api.renameChannel({ id: modalInfo.item.id, name: `${name.trim()}`});
-    hideModal();
-  }
+  const onSubmit = async ({ name }) => {
+    try {
+      inputRef.current.disabled = true;
+      submitRef.current.disabled = true;
+      await api.renameChannel({ id: modalInfo.item.id, name: filter.clean(`${name.trim()}`)});
+      hideModal();
+      showToast('success', t('toasts.renamed'));
+    } catch(e) {
+      inputRef.current.disabled = false;
+      submitRef.current.disabled = false;
+      showToast('error', t('toasts.error'));
+    }
+  };
 
   const errorText = errors.name ? `main.channels.modals.errors.${errors.name.message}` : null;
     
@@ -50,12 +62,12 @@ const Rename = ({modalInfo, hideModal, channels}) => {
                 inputRef.current = e;
               }}
             />
-            <FormLabel htmlFor="name" className="visually-hidden">Название</FormLabel>
+            <FormLabel htmlFor="name" className="visually-hidden">{t('extra.name')}</FormLabel>
             <div className="invalid-feedback">{t(errorText)}</div>
           </FormGroup>
           <div className="d-flex justify-content-end gap-2 mt-3">
             <Button variant="secondary" onClick={hideModal}>{t('main.channels.modals.undoBtn')}</Button>
-            <Button variant="primary" type="submit">{t('main.channels.modals.sendBtn')}</Button>
+            <Button variant="primary" type="submit" ref={submitRef}>{t('main.channels.modals.sendBtn')}</Button>
           </div>
         </form>
       </Modal.Body>

@@ -11,17 +11,21 @@ import Channels from '../components/channels/Channels.jsx';
 import Chat from '../components/chat/Chat.jsx';
 import useAuth from '../hooks/useAuth.jsx';
 import LoadingImage from "../img/loading.png";
+import { useTranslation } from 'react-i18next';
+import showToast from '../showToast.js';
 
 const MainPage = () => {
+  const { t } = useTranslation();
   const { getAuthHeader } = useAuth();
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log(getAuthHeader);
       const { data } = await axios.get(routes.dataPath(), {
         headers: getAuthHeader(),
+      }).catch(() => {
+        showToast(t('toasts.error'));
       });
       const {channels, messages, currentChannelId } = data;
 
@@ -33,15 +37,18 @@ const MainPage = () => {
     };
 
     fetchData();
-  }, [dispatch, getAuthHeader]);
+  }, []);
 
-  //ПОМЕНЯТЬ ЭТО НА КАРТИНКУ ЗАГРУЗКИ!!!
     if (isLoading === true) {
-      return <img src={LoadingImage} width='500px' alt='Загрузка'/>;
+      return (
+        <div className='container h-100'>
+          <div className="d-flex h-100 justify-content-center align-items-center">
+            <img src={LoadingImage} width='150px' alt={t('extra.loading')} />
+          </div>
+        </div>
+      );
     }
     
-    console.log('а теперь тут');
-
     return (
         <div className='container h-100 overflow-hidden my-4 shadow'>
           <div className="row h-100 justify-content-center">
@@ -61,4 +68,4 @@ const MainPage = () => {
     )
 };
   
-  export default MainPage;
+export default MainPage;

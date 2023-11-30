@@ -2,6 +2,7 @@ import { Modal, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 
 import useApi from '../../hooks/useApi';
+import showToast from '../../showToast';
 
 const Remove = ({ modalInfo, hideModal }) => {
   const { t } = useTranslation();
@@ -9,6 +10,7 @@ const Remove = ({ modalInfo, hideModal }) => {
   const handleClick = () => {
     api.removeChannel({ id: modalInfo.item.id});
     hideModal();
+    showToast('success', t('toasts.removed'));
   }
 
   return (

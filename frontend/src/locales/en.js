@@ -4,6 +4,7 @@ const en = {
       en: 'Eng',
       ru: 'Рус',
     },
+    name: 'AslecodeChat',
     logIn: {
       login: 'Log in',
       username: 'Username',
@@ -67,6 +68,21 @@ const en = {
         },
         input: 'Type a message...',
       },
+    },
+    toasts: {
+      added: 'Channel has been created!',
+      renamed: 'Channel has been renamed!',
+      removed: 'channel has been removed!',
+      error: 'Network Error :(',
+    },
+    extra: {
+      auth: 'Authorization',
+      loading: 'Loading',
+      notFound: 'Not found',
+      signUp: 'Registration',
+      text: 'Text',
+      name: 'Name',
+      logo: 'Logo',
     },
   },
 };

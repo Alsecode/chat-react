@@ -4,6 +4,7 @@ const ru = {
       en: 'Eng',
       ru: 'Рус',
     },
+    name: 'AslecodeChat',
     logIn: {
       login: 'Войти',
       username: 'Ваш ник',
@@ -68,6 +69,21 @@ const ru = {
         },
         input: 'Введите сообщение...',
       },
+    },
+    toasts: {
+      added: 'Канал создан!',
+      renamed: 'Канал переименован!',
+      removed: 'Канал удалён!',
+      error: 'Ошибка соединения :(',
+    },
+    extra: {
+      auth: 'Авторизация',
+      loading: 'Загрузка',
+      notFound: 'Не найдено',
+      signUp: 'Регистрация',
+      text: 'Текст',
+      name: 'Название',
+      logo: 'Лого',
     },
   },
 };
