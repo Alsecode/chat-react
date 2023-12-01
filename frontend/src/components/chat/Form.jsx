@@ -35,10 +35,9 @@ const ChatForm = ({ channelId, username }) => {
       inputRef.current.disabled = false;
       reset();
     } catch {
+      showToast('error', t('toasts.error'));
       inputRef.current.disabled = false;
       submitRef.current.disabled = false;
-      showToast('error', t('toasts.error'));
-      return;
     }
   };
 

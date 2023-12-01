@@ -4,7 +4,6 @@ import initStore from './slices/index';
 import { io } from 'socket.io-client';
 import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
 
 import { actions as channelsActions } from './slices/channelsSlice.js';
 import { actions as messagesActions } from './slices/messagesSlice.js';
@@ -44,23 +43,69 @@ const AuthProvider = ({ children }) => {
   );
 };
 
-const sendSocket = (action, item, socket, dispatch) => (
+const sendSocket = async (action, item, socket, dispatch) => (
   new Promise((resolve, reject) => {
-    const timeoutId = setTimeout(() => reject(() => new Error('Timeout')), 3000);
-    socket.emit(action, item, (response) => {
-      clearTimeout(timeoutId);
-      if (response.status === 'ok') {
-        resolve(response);
-      } else {
-        reject(() => new Error('Response Error'));
-        return;
-      }
-      if (action === 'newChannel') {
-        dispatch(currentChannelActions.updateCurrentChannel(response.data.id));
-      }
+    let requestSent = false;
+    let connectionError = false;
+    let itemToSend = { ...item };
+
+    // Обработчик ошибки подключения
+    socket.on('connect_error', (err) => {
+      connectionError = true;
+      reject(new Error(`Connection Error: ${err.message || 'Unknown error'}`));
     });
+
+    // Отправляем событие на сервер
+    const sendRequest = () => {
+      if (!requestSent && !connectionError) {
+        requestSent = true;
+
+        socket.emit(action, itemToSend, (response) => {
+          // Обработка успешного ответа
+          if (response.status === 'ok') {
+
+            // Дополнительные действия, если action === 'newChannel'
+
+            resolve(response);
+            console.log('так я СЕЙЧАС тут');
+
+            requestSent = false;  // Сброс флага отправки запроса для разрешения новых запросов
+          } else {
+            reject(new Error('Response Error'));
+
+            requestSent = false;  // Сброс флага отправки запроса, так как запрос не был успешно обработан
+          }
+
+          if (action === 'newChannel') {
+            console.log('так я тут');
+            dispatch(currentChannelActions.updateCurrentChannel(response.data.id));
+          }
+        })
+      }
+    };
+
+    // Вызываем sendRequest сразу, если соединение уже установлено
+    if (socket.connected) {
+      sendRequest();
+    }
+
+    // Обработчик события 'connect' - вызывается после восстановления соединения
+    const connectHandler = () => {
+      // Сразу после восстановления соединения разрешаем отправку новых запросов
+      requestSent = false;
+
+      // Отправляем отложенный запрос, если есть
+      sendRequest();
+      // Удаляем обработчик, чтобы избежать повторных вызовов при будущих событиях 'connect'
+      socket.off('connect', connectHandler);
+    };
+
+    // Устанавливаем обработчик события 'connect' для обработки восстановления соединения
+    socket.on('connect', connectHandler);
   })
 );
+
+
 
 const getApi = (socket, dispatch) => ({
   newMessage: (message) => sendSocket('newMessage', message, socket),
@@ -104,12 +149,11 @@ const init = async () => {
   });
 
   socket.on('renameChannel', (payload) => {
-    dispatch(channelsActions.renameChannel({ id: payload.id, changes: payload }));
+    dispatch(channelsActions.renameChannel({ id: payload.id, name: payload.name }));
   });
 
   await i18next 
     .use(initReactI18next)
-    .use(LanguageDetector)
     .init({
     resources,
     fallbackLng: 'ru',
