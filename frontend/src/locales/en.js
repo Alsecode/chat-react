@@ -85,6 +85,7 @@ const en = {
       managment: 'Channel managment',
       addBtn: 'Add channel',
       logo: 'Logo',
+      plus: '+',
     },
   },
 };
