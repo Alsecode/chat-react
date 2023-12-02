@@ -65,7 +65,7 @@ const Rename = ({ modalInfo, hideModal, channels }) => {
                 inputRef.current = e;
               }}
             />
-            <FormLabel htmlFor="name" className="visually-hidden">{t('extra.managment')}</FormLabel>
+            <FormLabel htmlFor="name" className="visually-hidden">{t('extra.name')}</FormLabel>
             <div className="invalid-feedback">{t(errorText)}</div>
           </FormGroup>
           <div className="d-flex justify-content-end gap-2 mt-3">
