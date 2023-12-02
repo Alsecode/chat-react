@@ -39,7 +39,7 @@ const init = async () => {
   });
 
   socket.on('renameChannel', (payload) => {
-    dispatch(channelsActions.renameChannel({ id: payload.id, name: payload.name }));
+    dispatch(channelsActions.renameChannel({ id: payload.id, changes: payload }));
   });
 
   await i18next
