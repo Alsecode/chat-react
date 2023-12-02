@@ -4,7 +4,7 @@ const ru = {
       en: 'Eng',
       ru: 'Рус',
     },
-    name: 'AslecodeChat',
+    name: 'Hexlet Chat',
     logIn: {
       login: 'Войти',
       username: 'Ваш ник',
