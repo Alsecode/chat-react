@@ -8,4 +8,6 @@ const modals = {
   renaming: Rename,
 };
 
-export const getModal = (modalName) => modals[modalName];
+const getModal = (modalName) => modals[modalName];
+
+export default getModal;

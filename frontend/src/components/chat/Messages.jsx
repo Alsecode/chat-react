@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef } from 'react';
 
 const Messages = ({ items }) => {
   const scrollRef = useRef();
@@ -8,13 +8,22 @@ const Messages = ({ items }) => {
   useEffect(() => {
     scrollRef.current.scrollTo({
       top: scrollRef.current.scrollHeight,
-      behavior: "smooth"
+      behavior: 'smooth',
     });
   }, [messagesCount]);
 
   return (
     <div className="overflow-auto px-5 scroll-block" ref={scrollRef}>
-      {items.map((message) => <p className="mb-2" key={message.id}><b>{message.username}: </b>{message.body}</p>)}
+      {items.map((message) => (
+        <p className="mb-2 text-break" key={message.id}>
+          <b>
+            {message.username}
+            :
+            {' '}
+          </b>
+          {message.body}
+        </p>
+      ))}
     </div>
   );
 };

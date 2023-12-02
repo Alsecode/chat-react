@@ -4,11 +4,11 @@ import messagesReducer from './messagesSlice';
 import currentChannelReducer from './currentChannelSlice';
 
 const initStore = () => configureStore({
-    reducer: {
-        currentChannel: currentChannelReducer,
-        channels: channelsReducer,
-        messages: messagesReducer,
-    }
+  reducer: {
+    currentChannel: currentChannelReducer,
+    channels: channelsReducer,
+    messages: messagesReducer,
+  },
 });
 
 export default initStore;

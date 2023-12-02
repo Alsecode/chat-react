@@ -11,15 +11,15 @@ const slice = createSlice({
   name: 'channels',
   initialState,
   reducers: {
-      addChannel: channelsAdapter.addOne,
-      addChannels: channelsAdapter.addMany,
-      renameChannel: channelsAdapter.updateOne,
-      removeChannel: channelsAdapter.removeOne,
-  }
+    addChannel: channelsAdapter.addOne,
+    addChannels: channelsAdapter.addMany,
+    renameChannel: channelsAdapter.updateOne,
+    removeChannel: channelsAdapter.removeOne,
+  },
 });
 
 export const selectors = channelsAdapter.getSelectors((state) => state.channels);
 
-export const actions = slice.actions;
+export const { actions } = slice;
 
 export default slice.reducer;

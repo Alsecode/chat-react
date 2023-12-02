@@ -1,15 +1,18 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import { useEffect, useRef } from 'react';
-import { Modal, FormGroup, FormControl, FormLabel, Button } from 'react-bootstrap';
-import { useForm } from "react-hook-form";
+import {
+  Modal, FormGroup, FormControl, FormLabel, Button,
+} from 'react-bootstrap';
+import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { yupResolver } from "@hookform/resolvers/yup";
+import { yupResolver } from '@hookform/resolvers/yup';
 
 import schemas from '../../schemas/index.js';
 import useApi from '../../hooks/useApi.jsx';
-import showToast from '../../showToast.js';
-import filter from "../../filter";
+import showToast from '../../helpers/showToast.js';
+import filter from '../../helpers/filter.js';
 
-const Add = ({hideModal, channels}) => {
+const Add = ({ hideModal, channels }) => {
   const { t } = useTranslation();
 
   const inputRef = useRef();
@@ -21,7 +24,7 @@ const Add = ({hideModal, channels}) => {
   const api = useApi();
 
   const channelsNames = channels.map((channel) => channel.name);
-  
+
   const yupSchema = schemas.channel(channelsNames);
 
   const { register, handleSubmit, formState: { errors } } = useForm({
@@ -33,10 +36,10 @@ const Add = ({hideModal, channels}) => {
     try {
       inputRef.current.disabled = true;
       submitRef.current.disabled = true;
-      await api.newChannel({ name: filter.clean(`${name.trim()}`)});
+      await api.newChannel({ name: filter.clean(`${name.trim()}`) });
       hideModal();
       showToast('success', t('toasts.added'));
-    } catch(e) {
+    } catch (e) {
       showToast('error', t('toasts.error'));
       inputRef.current.disabled = false;
       submitRef.current.disabled = false;
@@ -54,7 +57,7 @@ const Add = ({hideModal, channels}) => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <FormGroup>
             <FormControl
-              name='name'
+              name="name"
               isInvalid={errors.name}
               {...rest}
               ref={(e) => {

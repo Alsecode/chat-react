@@ -82,6 +82,7 @@ const en = {
       signUp: 'Registration',
       text: 'Text',
       name: 'Name',
+      addBtn: 'Add channel',
       logo: 'Logo',
     },
   },

@@ -2,8 +2,8 @@ import signUp from './signup';
 import channel from './channel';
 
 const schemas = {
-    signUp: signUp,
-    channel: channel,
+  signUp,
+  channel,
 };
 
 export default schemas;
