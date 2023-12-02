@@ -17,7 +17,7 @@ import resources from './locales/index.js';
 import getApi from './helpers/getApi.js';
 
 const rollbarConfig = {
-  accessToken: 'POST_CLIENT_ITEM_ACCESS_TOKEN',
+  accessToken: process.env.POST_CLIENT_ITEM_ACCESS_TOKEN,
   environment: 'production',
 };
 
