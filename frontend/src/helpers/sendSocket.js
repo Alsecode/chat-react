@@ -1,3 +1,4 @@
+/* eslint-disable functional/no-let */
 import { actions as currentChannelActions } from '../slices/currentChannelSlice';
 
 const sendSocket = async (action, item, socket, dispatch) => (
