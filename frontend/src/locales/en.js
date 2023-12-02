@@ -72,7 +72,7 @@ const en = {
     toasts: {
       added: 'Channel has been created!',
       renamed: 'Channel has been renamed!',
-      removed: 'channel has been removed!',
+      removed: 'Channel has been removed!',
       error: 'Network Error :(',
     },
     extra: {

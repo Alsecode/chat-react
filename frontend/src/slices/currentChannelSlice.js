@@ -10,7 +10,10 @@ const slice = createSlice({
   name: 'currentChannel',
   initialState,
   reducers: {
-    updateCurrentChannel: (state, action) => action.payload,
+    updateCurrentChannel: (state, action) => {
+      // eslint-disable-next-line no-param-reassign
+      state.id = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(channelsActions.removeChannel, (state, action) => {
@@ -18,9 +21,9 @@ const slice = createSlice({
       const channelId = action.payload;
       const mainChannelId = 1;
       if (channelId === state.id) {
-        return mainChannelId;
+        // eslint-disable-next-line no-param-reassign
+        state.id = mainChannelId;
       }
-      return state;
     });
   },
 });
