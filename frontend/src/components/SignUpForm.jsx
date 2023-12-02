@@ -92,7 +92,7 @@ const FormSection = () => {
           {...register('passwordConfirmation')}
           isInvalid={errors.passwordConfirmation}
         />
-        <Form.Label htmlFor="password">{t('signUp.confirmation')}</Form.Label>
+        <Form.Label htmlFor="passwordConfirmation">{t('signUp.confirmation')}</Form.Label>
         <div className="invalid-tooltip">{t(confirmationErrorText)}</div>
       </Form.Group>
       <Button type="submit" variant="outline-primary" className="w-100 mb-3 mt-2">{t('signUp.button')}</Button>
