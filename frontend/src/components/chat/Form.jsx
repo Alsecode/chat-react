@@ -53,6 +53,7 @@ const ChatForm = ({ channelId, username }) => {
             id="body"
             placeholder={t('main.chat.input')}
             className="border-0 p-0 ps-2 form-control text-truncate"
+            aria-label="Новое сообщение"
             {...rest}
             ref={(e) => {
               ref(e);
