@@ -57,7 +57,8 @@ const Add = ({ hideModal, channels }) => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <FormGroup>
             <FormControl
-              name="name"
+              name="addChannel"
+              id="addChannel"
               isInvalid={errors.name}
               {...rest}
               ref={(e) => {
@@ -65,7 +66,7 @@ const Add = ({ hideModal, channels }) => {
                 inputRef.current = e;
               }}
             />
-            <FormLabel htmlFor="name" className="visually-hidden">{t('extra.name')}</FormLabel>
+            <FormLabel htmlFor="addChannel" className="visually-hidden">{t('extra.name')}</FormLabel>
             <div className="invalid-feedback">{t(errorText)}</div>
           </FormGroup>
           <div className="d-flex justify-content-end gap-2 mt-3">
