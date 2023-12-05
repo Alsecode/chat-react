@@ -13,7 +13,7 @@ const Messages = ({ items }) => {
   }, [messagesCount]);
 
   return (
-    <div className="overflow-auto px-5 scroll-block" ref={scrollRef}>
+    <div className="overflow-auto px-5 scroll-block bg-dark" ref={scrollRef}>
       {items.map((message) => (
         <p className="mb-2 text-break" key={message.id}>
           <b>

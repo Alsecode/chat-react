@@ -1,5 +1,8 @@
-.bg-login {
-  background: #f7f7f7;
+@import "./main-colors.scss";
+@import "../../node_modules/bootstrap/scss/bootstrap.scss";
+
+.bg-darker {
+  background: #1b1e20;
 }
 
 .animation-show {

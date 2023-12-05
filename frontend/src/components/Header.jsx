@@ -16,7 +16,7 @@ const Header = () => {
   const logOutBtn = <button type="button" className="btn btn-primary" onClick={logOut}>{t('main.logOut')}</button>;
 
   return (
-    <Navbar expand="sm" className="navbar navbar-light bg-white shadow-sm">
+    <Navbar expand="sm" className="navbar shadow-sm bg-dark">
       <div className="container justify-content-between gap-2">
         <Link className="navbar-brand" to="/">
           <img src={Logo} width="30px" height="22px" alt={t('extra.logo')} className=" mb-1 pe-2" />

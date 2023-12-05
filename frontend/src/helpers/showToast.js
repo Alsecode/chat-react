@@ -9,7 +9,7 @@ const options = {
   draggable: true,
   progress: undefined,
   transition: Flip,
-  theme: 'light',
+  theme: 'dark',
 };
 
 const showToast = (type, message) => toast[type](message, options);

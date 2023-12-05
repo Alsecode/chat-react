@@ -49,12 +49,12 @@ const MainPage = () => {
   return (
     <div className="container h-100 overflow-hidden my-4 shadow">
       <div className="row h-100 justify-content-center">
-        <div className="col-12 bg-white mh-100">
+        <div className="col-12 mh-100">
           <div className="row h-100">
-            <div className="col-md-2 col-4  border-end h-100 bg-light px-0">
+            <div className="col-md-2 col-4 border-end h-100 px-0 bg-darker">
               <Channels />
             </div>
-            <div className="col p-0 d-flex flex-column h-100">
+            <div className="col p-0 d-flex flex-column h-100 bg-dark">
               <Chat />
             </div>
           </div>

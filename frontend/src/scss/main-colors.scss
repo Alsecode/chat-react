@@ -1,0 +1,11 @@
+@use "sass:map";
+
+$brand-theme-colors: (
+  "primary": #83A2FF,
+  "secondary": #B6BBC4,
+  "danger": #FA7070,
+);
+
+$primary:   map.get($brand-theme-colors, "primary");
+$secondary: map.get($brand-theme-colors, "secondary");
+$danger:    map.get($brand-theme-colors, "danger");

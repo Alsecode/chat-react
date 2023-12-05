@@ -1,5 +1,3 @@
-import './App.scss';
-
 import {
   BrowserRouter, Routes, Route, Navigate,
 } from 'react-router-dom';
@@ -16,7 +14,6 @@ import useAuth from './hooks/useAuth';
 
 const MainPageRouter = ({ children }) => {
   const { user } = useAuth();
-  console.log(user);
 
   return (
     user ? children : <Navigate to={routes.loginPage()} />
@@ -26,7 +23,7 @@ const MainPageRouter = ({ children }) => {
 const App = () => (
   <>
     <BrowserRouter>
-      <div className="d-flex flex-column vh-100 bg-light">
+      <div className="d-flex flex-column vh-100 bg-darker">
         <Header />
         <Routes>
           <Route path={routes.mainPage()} element={<MainPageRouter><MainPage /></MainPageRouter>} />
